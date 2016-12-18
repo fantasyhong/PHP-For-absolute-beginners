@@ -18,6 +18,6 @@ if($_SERVER['REQUEST_METHOD']=='POST'&&$_POST['submit']=='Save Entry'&&!empty($_
 }
 
 else{
-	header('Location:../admin.php');
+	header('Location:../');
 	exit;
 }
