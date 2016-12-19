@@ -1,5 +1,5 @@
 <?php
-function retrieveEntries($db,$id=NULL){
+function retrieveEntries($db,$page,$id=NULL){
 	//$e=array();
 	//check if id is present in the parameter
 	if(isset($id)){
@@ -19,12 +19,18 @@ function retrieveEntries($db,$id=NULL){
 		$fulldisp=1;
 	}
 	else{
-		$sql="SELECT id,title
+		$sql="SELECT id,page,title,entry
 				FROM entries
+				WHERE page=?
 				ORDER BY created DESC";
-		foreach($db->query($sql) as $row){
+		$stmt=$db->prepare($sql);
+		$stmt->execute(array($page));
+		$e=NULL;//declare variable to avoid errors
+		/*foreach($db->query($sql) as $row){
 			$e[]=array('id'=>$row['id'],'title'=>$row['title']);
-		}
+		}*/
+		while($row=$stmt->fetch())
+			$e[]=$row;
 		$fulldisp=0; //flg for mutli entries, tell the presentation layer NOT to display everything
 		/*
 		* If no entry is created ($e[] is null), display a default message and tell the presentation to display
