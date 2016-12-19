@@ -38,7 +38,8 @@ function retrieveEntries($db,$page,$id=NULL){
 		*/
 		if(!is_array($e)){
 			$fulldisp=1;
-			$e=array('title'=>"No entries yet",'entry'=>'<a href="/admin.php">Post a new entry</a>');
+			//$e=array('title'=>"No entries yet",'entry'=>'<a href="/admin.php">Post a new entry</a>');
+			$e=array('title'=>"No entries yet",'entry'=>'');
 		}
 	}
 	//Return the fulldisp flag alongside with the e array

@@ -65,10 +65,10 @@ else{
 	}
 }
 ?>
-	<?php if($page=='blog'):?>
-	<p class="backlink"> <a href="admin.php">Post a New Entry</a>
+	<?php //if($page=='blog'):?>
+	<p class="backlink"> <a href="admin.php?page=<?php echo $page ?>">Post a New Entry</a>
 	</p>
-	<?php endif;?>
+	<?php //endif;?>
 </div>	
 </body>
 </html>
