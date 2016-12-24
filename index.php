@@ -32,7 +32,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="css/default.css" type="text/css" />
+<link rel="stylesheet" href="/simple_blog/css/default.css" type="text/css" />
 <title>Simple Blog</title>
 
 </head>
@@ -45,11 +45,11 @@ if($fulldisp==1){
 	?>
 	<h2><?php echo $e['title']?></h2>
 	<p><?php echo $e['entry']?></p>
-	<?php if($page=='blog'):?>
+	<?php //if($page=='blog'):?>
 	<p class="backlink">
-	<a href="./">Back to Latest Entries</a>	
+	<a href="./?page=<?php echo $page?>">Back to Latest Entries</a>	
 	</p>
-	<?php endif;?>
+	<?php //endif;?>
 <?php 
 }
 
@@ -57,7 +57,7 @@ if($fulldisp==1){
 else{
 	foreach($e as $entry){
 ?>  <p>
-	<a href="?id=<?php echo $entry['id'] ?>">
+	<a href="?page=<?php echo $page?>&id=<?php echo $entry['id'] ?>">
 		<?php echo $entry['title']?>
 		</a>
 		</p>
