@@ -1,6 +1,5 @@
 RewriteEngine on
 RewriteBase /simple_blog/
-RewriteCond %{REQUEST_FILENAME} !-f
 RewriteRule \.(gif|jpg|png|css|js|inc\.php)$ - [L]
 RewriteRule ^admin/(\w+) admin.php?page=$1 [NC,L]
 RewriteRule ^admin/?$ admin.php [NC,L]

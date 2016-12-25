@@ -1,14 +1,14 @@
 <?php
-function retrieveEntries($db,$page,$id=NULL){
+function retrieveEntries($db,$page,$url=NULL){
 	//$e=array();
 	//check if id is present in the parameter
-	if(isset($id)){
-		$sql="SELECT title,entry
+	if(isset($url)){
+		$sql="SELECT id,page,title,entry
 				FROM entries
-				WHERE id=?
+				WHERE url=?
 				LIMIT 1";
 		$stmt=$db->prepare($sql);
-		$stmt->execute(array($_GET['id']));
+		$stmt->execute(array($_GET['url']));
 		//$row=$stmt->fetch();
 		//echo $row;
 		//echo hi;
@@ -19,7 +19,7 @@ function retrieveEntries($db,$page,$id=NULL){
 		$fulldisp=1;
 	}
 	else{
-		$sql="SELECT id,page,title,entry
+		$sql="SELECT id,page,title,entry,url
 				FROM entries
 				WHERE page=?
 				ORDER BY created DESC";
@@ -29,9 +29,16 @@ function retrieveEntries($db,$page,$id=NULL){
 		/*foreach($db->query($sql) as $row){
 			$e[]=array('id'=>$row['id'],'title'=>$row['title']);
 		}*/
-		while($row=$stmt->fetch())
-			$e[]=$row;
-		$fulldisp=0; //flg for mutli entries, tell the presentation layer NOT to display everything
+		while($row=$stmt->fetch()){
+			if($page=='blog'){
+				$e[]=$row;
+				$fulldisp=0; //flg for mutli entries, tell the presentation layer NOT to display everything
+			}
+			else{  //not a good way to check, needs improvement
+				$e=$row;
+				$fulldisp=1;
+			}
+		}
 		/*
 		* If no entry is created ($e[] is null), display a default message and tell the presentation to display
 		* the message
@@ -57,3 +64,14 @@ function sanitizeData($data){
 
 	}
 }
+
+/*
+ * This function gets rid of the whitespace in the title and replaces it with hyphen, it also removes any speical characters
+ */
+
+function makekUrl($title){
+	$patterns=array('/\s+/','/(?!-)\W+/');
+	$replacements=array('-','');
+	return preg_replace($patterns, $replacements, strtolower($title));
+}
+

@@ -12,7 +12,7 @@ ul#menu{
 	list-style:none;
 }
 
-ul#menu{
+ul#menu>li{
 	display:inline;
 }
 
@@ -82,7 +82,7 @@ input[type=hidden]{
 	margin:5px 0 15px;
 }
 
-.commentP{
+.comment{
 	padding:0 0 10px;
 }
 

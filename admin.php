@@ -16,7 +16,7 @@ else{
 </head>
 <body>
 <h1> Simple Blog Application</h1>
-<form method="post" action="inc/update.inc.php">
+<form method="post" action="/simple_blog/inc/update.inc.php">
  <fieldset>
   <legend>New Entry Submission</legend>
   <label>Title<input type="text" name="title" maxlength="150" /></label>

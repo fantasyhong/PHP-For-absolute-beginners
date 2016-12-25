@@ -17,11 +17,11 @@
 		$page='blog'; //load default
 	}
 	
-	//check if ID is passed in the url
-	$id=(isset($_GET['id']))?(int)$_GET['id']:NULL;
+	//check if url is passed in the url
+	$url=(isset($_GET['url']))?$_GET['url']:NULL;
 	
 	//load the entries
-	$e=retrieveEntries($db,$page,$id);
+	$e=retrieveEntries($db,$page,$url);
 	
 	//get the fulldisplay flag and remove it from the array
 	$fulldisp=array_pop($e);
@@ -38,18 +38,23 @@
 </head>
 <body>
 <h1> Simple Blog Application</h1>
+<ul id="menu">
+	<li><a href="/simple_blog/blog/">Blog</a></li>
+	<li><a href="/simple_blog/about/">About the Author</a></li>
+</ul>
 <div id="entries">
 <?php
-//show the entry is the flag is set
+//show the entry if the flag is set
 if($fulldisp==1){
+	$url=(isset($url))?$url:$e['url']; //get url if not passed
 	?>
 	<h2><?php echo $e['title']?></h2>
 	<p><?php echo $e['entry']?></p>
-	<?php //if($page=='blog'):?>
+	<?php if($page=='blog'):?>
 	<p class="backlink">
-	<a href="./?page=<?php echo $page?>">Back to Latest Entries</a>	
+	<a href="/simple_blog/<?php echo $e['page']?>">Back to Latest Entries</a>	
 	</p>
-	<?php //endif;?>
+	<?php endif;?>
 <?php 
 }
 
@@ -57,7 +62,7 @@ if($fulldisp==1){
 else{
 	foreach($e as $entry){
 ?>  <p>
-	<a href="?page=<?php echo $page?>&id=<?php echo $entry['id'] ?>">
+	<a href="/simple_blog/<?php echo $entry['page']?>/<?php echo $entry['url'] ?>">
 		<?php echo $entry['title']?>
 		</a>
 		</p>
@@ -66,7 +71,7 @@ else{
 }
 ?>
 	<?php //if($page=='blog'):?>
-	<p class="backlink"> <a href="admin.php?page=<?php echo $page ?>">Post a New Entry</a>
+	<p class="backlink"> <a href="/simple_blog/admin/<?php echo $page ?>">Post a New Entry</a>
 	</p>
 	<?php //endif;?>
 </div>	

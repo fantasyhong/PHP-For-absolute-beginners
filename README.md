@@ -4,10 +4,18 @@ This repository contains all the code I've written so far when reading the book 
 
 <strong style="font-size:20px">Change Log</strong><br />
 
+12/25/2016:
+<ul><li>Added the functionality to create friendly URLs automatically</li>
+<li>Fixed the redirecting issue with Cancel button</li>
+<li>Added the Menu to the top of the index page</li>
+</ul>
+<br />
+
 12/24/2016:
 <ul><li>Added .htaccess to handle basic redirecting.</li>
 <li>Fixed an issue where the CSS file not loading after redirecting with .htaccess rules</li>
 </ul>
+<br />
 
 12/18/2016: 
 <ul><li>Fixed the redirecting issue when the cancel button doesn't send the user back to the main page.</li>
