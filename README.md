@@ -4,6 +4,13 @@ This repository contains all the code I've written so far when reading the book 
 
 <strong style="font-size:20px">Change Log</strong><br />
 
+<!-- 12/--/2016:
+<li>Added the ability to edit an entry</li>
+<li>Added the ability to delete an entry</li>
+<li>Allow users to confirm if the entry needs to be deleted</li>
+</ul>
+<br />-->
+
 12/25/2016:
 <ul><li>Added the functionality to create friendly URLs automatically</li>
 <li>Fixed the redirecting issue with Cancel button</li>

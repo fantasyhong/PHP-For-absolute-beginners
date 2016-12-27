@@ -53,6 +53,18 @@ function retrieveEntries($db,$page,$url=NULL){
 	return $e;
 }
 
+function adminlinks($page, $url){
+	//Fotmat the links for edit & delete
+	$editURL="/simple_blog/admin/$page/$url";
+	$deleteURL="/simple_blog/admin/delete/$url";
+	
+	//Make hyperlinks for both options
+	$admin['edit']="<a href=\"$editURL\">edit</a>";
+	$admin['delete']="<a href=\"$deleteURL\">delete</a>";
+	
+	return $admin;
+}
+
 function sanitizeData($data){
 	//if data is an entry, remove all tags except the <a> tag
 	if(!is_array($data)){
@@ -75,3 +87,30 @@ function makekUrl($title){
 	return preg_replace($patterns, $replacements, strtolower($title));
 }
 
+/*
+ * this function confirms whether the user wants to delete the entry form database
+ */
+function confirmDelete($db,$url){
+	$e=retrieveEntries($db,'', $url);
+	return <<<FORM
+	<form method="post" action="/simple_blog/admin.php">
+ 		<fieldset>
+		  <legend>Are You Sure?</legend>
+		  <p>Are you sure you want to delete the entry "$e[title]"?</p>
+		  <input type="submit" name="submit" value="Yes" />
+		  <input type="submit" name="submit" value="No" />
+		  <input type="hidden" name="action" value="delete" />
+		  <input type="hidden" name="url" value="$url" />
+ 		</fieldset>
+	</form>
+FORM;
+}
+
+function deleteEntry($db,$url){
+	$sql="DELETE FROM entries
+			WHERE url=?
+			LIMIT 1";
+	$stmt=$db->prepare($sql);
+	return $stmt->execute(array($url));
+	
+}

@@ -14,7 +14,30 @@ if($_SERVER['REQUEST_METHOD']=='POST'
 	//make connection to the sql server
 	include_once 'db.inc.php';
 	$db=new PDO(DB_INFO,DB_USER,DB_PASS);
-	//save entry
+	
+	/*
+	 * Reason why !empty() is used instead of isset(): 
+	 * At this point, the connection is made with the database, so we need to check 
+	 * if the id exists in the database, and !empty() does exactly what we want.
+	 * If we use isset() here, the if statement will always return true since id has to be
+	 * set at this stage, thus the wrong sql statement is executed, and new entries can't be
+	 * saved.
+	 */
+	
+	//Update existing entries
+	if(!empty($_POST['id'])){
+		$sql="UPDATE entries 
+			  SET title=?,entry=?,url=?
+			  WHERE id=?
+			  LIMIT 1";
+		$stmt=$db->prepare($sql);
+		$stmt->execute(
+				array($_POST['title'],$_POST['entry'], $url,$_POST['id'])
+				);
+		$stmt->closeCursor();
+	}
+	//Save new entries
+	else{
 	$sql = "INSERT INTO entries (page, title, entry, url)
 			VALUES (?, ?, ?, ?)";
 	$stmt=$db->prepare($sql);
@@ -23,11 +46,13 @@ if($_SERVER['REQUEST_METHOD']=='POST'
 			);
 	$stmt->closeCursor();
 	//process the page info
+	}
 	$page=htmlentities(strip_tags($_POST['page']));
 	//get the ID of the entry
 	//$id_obj=$db->query("SELECT LAST_INSERT_ID()");
 	//$id=$id_obj->fetch();
 	//$id_obj->closeCursor();
+	
 	//send the user to the new entry
 	header('Location:/simple_blog/'.$page.'/'.$url);
 	exit;

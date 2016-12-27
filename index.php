@@ -37,19 +37,27 @@
 
 </head>
 <body>
-<h1> Simple Blog Application</h1>
+<h1>Simple Blog Application</h1>
 <ul id="menu">
-	<li><a href="/simple_blog/blog/">Blog</a></li>
-	<li><a href="/simple_blog/about/">About the Author</a></li>
+	<li><a href="/simple_blog/blog">Blog</a></li>
+	<li><a href="/simple_blog/about">About the Author</a></li>
 </ul>
 <div id="entries">
 <?php
 //show the entry if the flag is set
 if($fulldisp==1){
+	//echo $page;
 	$url=(isset($url))?$url:$e['url']; //get url if not passed
+	
+	//Build the amdin links
+	$admin=adminlinks($page, $url);
 	?>
 	<h2><?php echo $e['title']?></h2>
 	<p><?php echo $e['entry']?></p>
+	<p>
+		<?php echo $admin['edit']?>
+		<?php if($page=='blog') echo $admin ['delete']?>
+	</p>
 	<?php if($page=='blog'):?>
 	<p class="backlink">
 	<a href="/simple_blog/<?php echo $e['page']?>">Back to Latest Entries</a>	
