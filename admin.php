@@ -80,19 +80,22 @@ else{
 	}
 	else:
 ?>
-<form method="post" action="/simple_blog/inc/update.inc.php">
+<form method="post" action="/simple_blog/inc/update.inc.php" enctype="multipart/form-data">
  <fieldset>
-  <legend><?php echo $legend?></legend>
-  <label>Title
-  	<input type="text" name="title" maxlength="150" value="<?php echo htmlentities($title)?>"/>
-  </label>
-  <label>Entry
-  	<textarea name="entry" cols="45" rows="10"><?php echo sanitizeData($entry)?></textarea>
-  </label>
-  <input type="hidden" name="id" value="<?php echo $id?>" />
-  <input type="hidden" name="page" value="<?php echo $page?>" />
-  <input type="submit" name="submit" value="Save Entry" />
-  <input type="submit" name="submit" value="Cancel" />
+	  <legend><?php echo $legend?></legend>
+	  <label>Title
+	  	<input type="text" name="title" maxlength="150" value="<?php echo htmlentities($title)?>"/>
+	  </label>
+	  <label>Image
+	  	<input type="file" name="image" />
+	  </label>
+	  <label>Entry
+	  	<textarea name="entry" cols="45" rows="10"><?php echo sanitizeData($entry)?></textarea>
+	  </label>
+	  <input type="hidden" name="id" value="<?php echo $id?>" />
+	  <input type="hidden" name="page" value="<?php echo $page?>" />
+	  <input type="submit" name="submit" value="Save Entry" />
+	  <input type="submit" name="submit" value="Cancel" />
  </fieldset>
 </form>
 <?php endif;?>

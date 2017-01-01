@@ -2,6 +2,8 @@
 
 include_once 'functions.inc.php';
 
+include_once 'images.inc.php';
+
 if($_SERVER['REQUEST_METHOD']=='POST'
 		&&$_POST['submit']=='Save Entry'
 		&&!empty($_POST['title'])
@@ -10,7 +12,33 @@ if($_SERVER['REQUEST_METHOD']=='POST'
 {
 	//create a url based on the entry
 	$url=makekUrl($_POST['title']);
+	
+	
+	//save image
+	if($_FILES['image']['tmp_name']){
+		try{
 			
+			//instatiate the class and set a save path
+			$img=new ImageHandler("/simple_blog/images/");
+			
+			//process the file and store the returned path
+			$img_path=$img->processUploadedImage($_FILES['image']);
+			
+			
+		}
+		catch(Exception $e){
+			//output error message 
+			die($e->getMessage());
+		}
+	}
+	else{
+		//if no image is uploaded
+		$img_path=null;
+	}
+	//Output the saved image path
+	//echo "Image path: ",$img_path,"<br />";
+	//exit;
+	
 	//make connection to the sql server
 	include_once 'db.inc.php';
 	$db=new PDO(DB_INFO,DB_USER,DB_PASS);
@@ -27,22 +55,22 @@ if($_SERVER['REQUEST_METHOD']=='POST'
 	//Update existing entries
 	if(!empty($_POST['id'])){
 		$sql="UPDATE entries 
-			  SET title=?,entry=?,url=?
+			  SET title=?,image=?,entry=?,url=?
 			  WHERE id=?
 			  LIMIT 1";
 		$stmt=$db->prepare($sql);
 		$stmt->execute(
-				array($_POST['title'],$_POST['entry'], $url,$_POST['id'])
+				array($_POST['title'],$img_path,$_POST['entry'], $url,$_POST['id'])
 				);
 		$stmt->closeCursor();
 	}
 	//Save new entries
 	else{
-	$sql = "INSERT INTO entries (page, title, entry, url)
-			VALUES (?, ?, ?, ?)";
+	$sql = "INSERT INTO entries (page, title, image, entry, url)
+			VALUES (?, ?, ?, ?, ?)";
 	$stmt=$db->prepare($sql);
 	$stmt->execute(
-			array($_POST['page'], $_POST['title'], $_POST['entry'], $url)
+			array($_POST['page'], $_POST['title'], $img_path,$_POST['entry'], $url)
 			);
 	$stmt->closeCursor();
 	//process the page info

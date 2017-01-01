@@ -3,7 +3,7 @@ function retrieveEntries($db,$page,$url=NULL){
 	//$e=array();
 	//check if id is present in the parameter
 	if(isset($url)){
-		$sql="SELECT id,page,title,entry
+		$sql="SELECT id,page,title,image,entry
 				FROM entries
 				WHERE url=?
 				LIMIT 1";
@@ -19,7 +19,7 @@ function retrieveEntries($db,$page,$url=NULL){
 		$fulldisp=1;
 	}
 	else{
-		$sql="SELECT id,page,title,entry,url
+		$sql="SELECT id,page,title,image,entry,url
 				FROM entries
 				WHERE page=?
 				ORDER BY created DESC";
@@ -113,4 +113,13 @@ function deleteEntry($db,$url){
 	$stmt=$db->prepare($sql);
 	return $stmt->execute(array($url));
 	
+}
+
+function formatImage($img=NULL,$alt=NULL){
+	if($img){
+		return '<img src="'.$img.'" alt="'.$alt.'" />';
+	}
+	else {
+		return NULL;
+	}
 }

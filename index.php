@@ -51,9 +51,14 @@ if($fulldisp==1){
 	
 	//Build the amdin links
 	$admin=adminlinks($page, $url);
+	
+	//Format the image if one exists
+	//if($e['image'])
+	$img=formatImage($e['image'],$e['title']);
 	?>
 	<h2><?php echo $e['title']?></h2>
-	<p><?php echo $e['entry']?></p>
+	<p><?php echo $img?>
+	<?php echo $e['entry']?></p>
 	<p>
 		<?php echo $admin['edit']?>
 		<?php if($page=='blog') echo $admin ['delete']?>

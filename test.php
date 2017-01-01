@@ -1,6 +1,6 @@
 
 
-<?php
+<!--<?php
 if($_SERVER['REQUEST_METHOD']=='POST'){
 $dbinfo='mysql:host=localhost;dbname=test';
 $user='root';
@@ -29,3 +29,28 @@ else{
  		<input type="submit"  />
  	</form>	
 <?php }?>
+-->
+
+<?php 
+
+$tom=new ToyRobot("Tom");
+
+$tom->writeName();
+
+$jim=new ToyRobot("Jim");
+
+$jim->writeName();
+
+class ToyRobot
+{
+	private $_name;
+	
+	public function __construct($name){
+		$this->_name=$name;
+	}
+	
+	public function writeName(){
+		echo 'My name is ',$this->_name,'.<br />';
+	}
+}
+?>
