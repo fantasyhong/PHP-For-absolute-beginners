@@ -4,6 +4,12 @@ This repository contains all the code I've written so far when reading the book 
 
 <strong style="font-size:20px">Change Log</strong><br />
 
+1/1/2017:
+<ul><li>Added the ability to resize the uploaded images to proper size</li>
+<li>The uploaded image is resized to save disk space</li>
+</ul>
+<br />
+
 12/31/2016:
 <ul><li>Added the ability to upload images</li>
 <li>Rename the uploaded image to avoid overwriting the previous uploads</li>
