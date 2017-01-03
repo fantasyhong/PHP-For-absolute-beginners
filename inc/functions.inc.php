@@ -3,7 +3,7 @@ function retrieveEntries($db,$page,$url=NULL){
 	//$e=array();
 	//check if id is present in the parameter
 	if(isset($url)){
-		$sql="SELECT id,page,title,image,entry
+		$sql="SELECT id,page,title,image,entry,created
 				FROM entries
 				WHERE url=?
 				LIMIT 1";
@@ -19,7 +19,7 @@ function retrieveEntries($db,$page,$url=NULL){
 		$fulldisp=1;
 	}
 	else{
-		$sql="SELECT id,page,title,image,entry,url
+		$sql="SELECT id,page,title,image,entry,url,created
 				FROM entries
 				WHERE page=?
 				ORDER BY created DESC";
@@ -45,7 +45,8 @@ function retrieveEntries($db,$page,$url=NULL){
 		*/
 		if(!is_array($e)){
 			$fulldisp=1;
-			$e=array('title'=>"No entries yet",'entry'=>'This page does not have an entry yet!');
+			$e=array('title'=>"No entries yet",
+					'entry'=>'This page does not have an entry yet!');
 		}
 	}
 	//Return the fulldisp flag alongside with the e array

@@ -33,6 +33,7 @@
 <html>
 <head>
 <link rel="stylesheet" href="/simple_blog/css/default.css" type="text/css" />
+<link rel="alternate" type="application/rss+xml" title="My Simple Blog - RSS 2.0" href="/simple_blog/feeds/rss.php"/>
 <title>Simple Blog</title>
 
 </head>
@@ -83,10 +84,18 @@ else{
 	}
 }
 ?>
-	<?php //if($page=='blog'):?>
-	<p class="backlink"> <a href="/simple_blog/admin/<?php echo $page ?>">Post a New Entry</a>
+	<?php if($page=='blog'):?>
+	<p class="backlink"> 
+		<a href="/simple_blog/admin/<?php echo $page ?>">
+		Post a New Entry
+		</a>
 	</p>
-	<?php //endif;?>
+	<?php endif;?>
+	<p>
+		<a href="/simple_blog/feeds/rss.php">
+		Subscribe via RSS!
+		</a>
+	</p>
 </div>	
 </body>
 </html>

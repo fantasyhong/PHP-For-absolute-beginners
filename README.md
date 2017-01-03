@@ -6,6 +6,7 @@ This repository contains all the code I've written so far when reading the book 
 
 1/2/2017:
 <ul><li>Added RSS feed to the blog</li>
+<li>Added date and GUID to the RSS feed</li>
 </ul>
 <br />
 
