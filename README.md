@@ -4,6 +4,11 @@ This repository contains all the code I've written so far when reading the book 
 
 <strong style="font-size:20px">Change Log</strong><br />
 
+1/2/2017:
+<ul><li>Added RSS feed to the blog</li>
+</ul>
+<br />
+
 1/1/2017:
 <ul><li>Added the ability to resize the uploaded images to proper size</li>
 <li>The uploaded image is resized to save disk space</li>
