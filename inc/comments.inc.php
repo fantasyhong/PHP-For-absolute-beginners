@@ -128,4 +128,48 @@ FORM;
 		return $display;
 	}
 	
+	//Ensure the user really wants to delete the comment
+	public function confirmDelete($id){
+		//Store the entry url if available
+		if(isset($_SERVER['HTTP_REFERER'])){
+			$url=$_SERVER['HTTP_REFERER'];
+		}
+		
+		//Otherwise use the default view
+		else{
+			$url='../';
+		}
+		return <<<FORM
+	<html>
+	<head>
+	<title>Please Confirm Your Decision</title>
+	<link rel="stylesheet" href="/simple_blog/css/default.css" type="text/css" />
+	<form method="post" action="/simple_blog/inc/update.inc.php">
+ 		<fieldset>
+		  <legend>Are You Sure?</legend>
+		  <p>Are you sure you want to delete this comment?</p>
+		  <input type="submit" name="confirm" value="Yes" />
+		  <input type="submit" name="confirm" value="No" />
+		  <input type="hidden" name="action" value="comment_delete" />
+		  <input type="hidden" name="url" value="$url" />
+		  <input type="hidden" name="id" value="$id" />
+ 		</fieldset>
+	</form>
+FORM;
+	}
+		
+	//Removes the comment corresponding to the $id from the database
+	public function deleteComment($id){
+		$sql="DELETE FROM comments
+				WHERE id=?
+				LIMIT 1";
+		if($stmt=$this->db->prepare($sql)){
+			$stmt->execute(array($id));
+			$stmt->closeCursor();
+			return TRUE;
+		}
+		else 
+			return FALSE;
+	}
+	
 }
