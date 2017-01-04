@@ -4,6 +4,12 @@ This repository contains all the code I've written so far when reading the book 
 
 <strong style="font-size:20px">Change Log</strong><br />
 
+1/3/2017:
+<ul><li>Added the comments to the each blog entry</li>
+<li>Fixed the scope for some variables</li>
+</ul>
+<br />
+
 1/2/2017:
 <ul><li>Added RSS feed to the blog</li>
 <li>Added date and GUID to the RSS feed</li>

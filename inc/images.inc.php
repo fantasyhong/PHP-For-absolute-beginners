@@ -1,7 +1,7 @@
 <?php
 class ImageHandler{
-	public $save_dir; //folder to save images
-	public $max_dims;
+	private $save_dir; //folder to save images
+	private $max_dims;
 	
 	public function __construct($save_dir,$max_dims=array(350,240)){
 		$this->save_dir=$save_dir;

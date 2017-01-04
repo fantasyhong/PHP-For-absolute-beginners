@@ -56,6 +56,17 @@ if($fulldisp==1){
 	//Format the image if one exists
 	//if($e['image'])
 	$img=formatImage($e['image'],$e['title']);
+	
+	if($page=='blog'){
+		//Load the comment object
+		include_once 'inc/comments.inc.php';
+		$comments=new Comments();
+		$comment_disp=$comments->showComments($e['id']);
+		$comment_form=$comments->showCommentsForm($e['id']);
+	}
+	else {
+		$comment_form=NULL;
+	}
 	?>
 	<h2><?php echo $e['title']?></h2>
 	<p><?php echo $img?>
@@ -68,6 +79,8 @@ if($fulldisp==1){
 	<p class="backlink">
 	<a href="/simple_blog/<?php echo $e['page']?>">Back to Latest Entries</a>	
 	</p>
+	<h3> Comments for This Entry </h3>
+	<?php echo $comment_disp,$comment_form;?>
 	<?php endif;?>
 <?php 
 }

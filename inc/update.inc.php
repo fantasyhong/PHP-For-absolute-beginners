@@ -86,6 +86,36 @@ if($_SERVER['REQUEST_METHOD']=='POST'
 	exit;
 }
 
+//If a comment is being posted, handle it here
+else if($_SERVER['REQUEST_METHOD']=='POST'
+		&&$_POST['submit']=='Post Comment'
+		&&!empty($_POST['name'])
+		&&!empty($_POST['email'])
+		&&!empty($_POST['comment'])){
+	//Include and instantiate the comment class
+	include_once 'comments.inc.php';
+	$comments=new Comments();
+	
+	//Save the comment
+	if($comments->saveComment($_POST)){ //essentially a lazy way to pass all the info, could be handled better
+		//If available, store the entry the user came from
+		if(isset($_SERVER['HTTP_REFERER'])){
+			$loc=$_SERVER['HTTP_REFERER'];
+		}
+		else{
+			$loc='../';
+		}
+		//send the user back to the entry
+		header('Location: '.$loc);
+		exit;
+	}
+	
+	//If saving fails, output an error message
+	else{
+		exit('Something went wrong while saving the comment');
+	}
+}
+
 else{
 	$page=htmlentities(strip_tags($_POST['page']));
 	header('Location:/simple_blog/'.$page);
