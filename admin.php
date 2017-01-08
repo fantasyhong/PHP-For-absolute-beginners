@@ -1,5 +1,10 @@
-
+<!DOCTYPE html>
 <?php 
+
+session_start();
+
+//If the user is logged in, we can continue
+if(isset($_SESSION['loggedin'])&& $_SESSION['loggedin']==1):
 /*
  * Include all external files
  */
@@ -55,15 +60,20 @@ if(isset($_GET['url']))
 	//save the entry info 
 	$id=$e['id'];
 	$title=$e['title'];
+	$img = $e['image'];
 	$entry=$e['entry'];
 }
 else{
+	//Check if we're creating a new user
+	if($page=='createuser'){
+		$create=createUserForm();
+	}
 	$legend="New Entry Submission";
 	
-	$id=$title=$entry=NULL;
+	$id=$title=$img=$entry=NULL;
 }
 ?>
-<!DOCTYPE html>
+
 <html>
 <head>
 	<link rel="stylesheet" href="/simple_blog/css/default.css" type="text/css" />
@@ -77,6 +87,10 @@ else{
 	if($page=='delete'):
 	{
 		echo $confirm;
+	}
+	elseif($page=='createuser'):
+	{
+		echo $create;
 	}
 	else:
 ?>
@@ -101,3 +115,33 @@ else{
 <?php endif;?>
 </body>
 </html>
+<?php 
+
+/*
+ * If we get here, the user is not logged in. Display a form and ask them to log in.
+ */
+else:
+?> 
+
+<html>
+<head>
+	<link rel="stylesheet" href="/simple_blog/css/default.css" type="text/css" />
+	<title>Please Log In</title>
+</head>
+<body>
+	<form method="post" action="/simple_blog/inc/update.inc.php" enctype="mutlipart/form-data">
+	 		<fieldset>
+			  <legend>Please Log In To Continue</legend>
+			  <label>Username
+				<input type="text" name="username" maxlength="75" />
+			  </label>
+			  <label>Password
+				<input type="password" name="password"  />
+			  </label>
+			  <input type="submit" name="submit" value="Log In" />
+			  <input type="hidden" name="action" value="login" />
+	 		</fieldset>
+	</form>
+</body>
+</html>
+<?php endif;?>

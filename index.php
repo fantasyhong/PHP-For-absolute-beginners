@@ -1,4 +1,6 @@
 <?php 
+
+	session_start();
 /*
  * Include all external files
  */
@@ -32,9 +34,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-<link rel="stylesheet" href="/simple_blog/css/default.css" type="text/css" />
-<link rel="alternate" type="application/rss+xml" title="My Simple Blog - RSS 2.0" href="/simple_blog/feeds/rss.php"/>
-<title>Simple Blog</title>
+	<link rel="stylesheet" href="/simple_blog/css/default.css" type="text/css" />
+	<link rel="alternate" type="application/rss+xml" title="My Simple Blog - RSS 2.0" href="/simple_blog/feeds/rss.php"/>
+	<title>Simple Blog</title>
 
 </head>
 <body>
@@ -43,6 +45,14 @@
 	<li><a href="/simple_blog/blog">Blog</a></li>
 	<li><a href="/simple_blog/about">About the Author</a></li>
 </ul>
+
+<?php if(isset($_SESSION['loggedin'])&&$_SESSION['loggedin']==1):?>
+		<p id="control_panel">
+			You are logged in!
+			<a href="/simple_blog/inc/update.inc.php?action=logout">Log out</a>
+		</p>
+<?php endif;?>
+
 <div id="entries">
 <?php
 //show the entry if the flag is set
@@ -50,9 +60,15 @@ if($fulldisp==1){
 	//echo $page;
 	$url=(isset($url))?$url:$e['url']; //get url if not passed
 	
+	//Display the admin links when a admin is logged in
+	if(isset($_SESSION['loggedin'])&&$_SESSION['loggedin']==1){
 	//Build the amdin links
 	$admin=adminlinks($page, $url);
-	
+	}
+	else{
+	//Hide the admin control from users
+	$admin=array('edit'=>NULL,'delete'=>NULL);
+	}
 	//Format the image if one exists
 	//if($e['image'])
 	$img=formatImage($e['image'],$e['title']);
@@ -97,7 +113,9 @@ else{
 	}
 }
 ?>
-	<?php if($page=='blog'):?>
+	<?php if($page=='blog'
+			&&isset($_SESSION['loggedin'])
+			&& $_SESSION['loggedin']==1):?>
 	<p class="backlink"> 
 		<a href="/simple_blog/admin/<?php echo $page ?>">
 		Post a New Entry

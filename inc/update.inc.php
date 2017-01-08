@@ -1,5 +1,7 @@
 <?php
 
+//Start the session
+session_start();
 include_once 'functions.inc.php';
 
 include_once 'images.inc.php';
@@ -153,6 +155,69 @@ else if($_SERVER['REQUEST_METHOD']=='POST'
 		header('Location: '.$loc);
 		exit;
 	}
+}
+
+//If a user is trying to log in,check it here
+else if($_SERVER['REQUEST_METHOD']=='POST'
+		&&$_POST['action']=='login'
+		&&!empty($_POST['username'])
+		&&!empty($_POST['password']))
+{
+		//Include database credentials and connect to the database
+		include_once 'db.inc.php';
+		$db=new PDO(DB_INFO,DB_USER,DB_PASS);
+		$sql="SELECT password
+				FROM admin
+				WHERE username=?";
+		$stmt=$db->prepare($sql);
+		//Retrieve the encrypted password from database
+		$stmt->execute(array($_POST['username']));
+		
+		/* Note: The following statements to fetch the admin password only works when 
+		 * there's only one admin in the database,
+		 * if there are mutliple admins, need a while loop instead
+		 */
+		$response=$stmt->fetch();
+		$check_pass=$response['password'];
+		
+		//Get the non-encrypted password from user
+		$pass=$_POST['password'];
+		
+		if(password_verify($pass, $check_pass)){
+			$_SESSION['loggedin']=1;
+		}
+		else{
+			$_SESSION['loggedin']=0;
+		}
+		header('Location: /simple_blog/');
+		exit;
+}
+
+//If an admin is being created, save it here
+else if($_SERVER['REQUEST_METHOD']=='POST'
+		&&$_POST['action']=='createuser'
+		&&!empty($_POST['username'])
+		&&!empty($_POST['password']))
+{
+		//Include database credentials and connect to the database
+		include_once 'db.inc.php';
+		$db=new PDO(DB_INFO,DB_USER,DB_PASS);
+		$sql="INSERT INTO admin(username,password)
+				VALUES(?,?)";
+		$stmt=$db->prepare($sql);
+		
+		//Use a strong encryption algorithm to encrypt the admin password
+		$password = password_hash($_POST['password'], PASSWORD_DEFAULT, ['cost' => 12]);
+		$stmt->execute(array($_POST['username'],$password));
+		header('Location: /simple_blog/');
+		exit;
+}
+
+//If the user has chosen to log out, process it here
+else if($_GET['action']=='logout'){
+	unset($_SESSION['loggedin']);
+	header('Location:../');
+	exit;
 }
 else{
 	$page=htmlentities(strip_tags($_POST['page']));
