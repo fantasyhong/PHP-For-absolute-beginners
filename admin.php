@@ -129,6 +129,12 @@ else:
 	<title>Please Log In</title>
 </head>
 <body>
+	<?php if(isset($_SESSION['loggedin'])&&$_SESSION['loggedin']==0):?>
+		<p id="control_panel">
+			Wrong username/password, try again!
+		</p>
+		<br />
+	<?php endif;?>
 	<form method="post" action="/simple_blog/inc/update.inc.php" enctype="mutlipart/form-data">
 	 		<fieldset>
 			  <legend>Please Log In To Continue</legend>

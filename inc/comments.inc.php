@@ -13,19 +13,50 @@ class Comments{
 	
 	//Display a form for users to enter new comments
 	public function showCommentsForm($blog_id){
+		
+		$errors=array(
+			1=>'<p class="error">Something went wrong while saving your comment. Please try again!</p>',
+			2=>'<p class="error">Please provide a valid email address!</p>',
+			3=>'<p class="error">Please answer the Math question correctly!</p>'
+		);
+		if(isset($_SESSION['error'])){
+			$error=$errors[$_SESSION['error']];
+		}
+		else 
+			$error=NULL;
+		//Check if session variable exist
+		if(isset($_SESSION['c_name'])){
+			$n=$_SESSION['c_name'];
+		}
+		else 
+			$n=NULL;
+		if(isset($_SESSION['c_email'])){
+			$e=$_SESSION['c_email'];
+		}
+		else
+			$e=NULL;
+		if(isset($_SESSION['c_comment'])){
+			$c=$_SESSION['c_comment'];
+		}
+		else
+			$c=NULL;
+		
+			
+		//Generate a challenge question
+		$challenge=$this->generateChallenge();
 		return <<<FORM
 	<form method="post" action="/simple_blog/inc/update.inc.php" id="comment-form">
  		<fieldset>
-		  <legend>Post a Comment</legend>
+		  <legend>Post a Comment</legend>$error
 		  <label>Name
-	  		<input type="text" name="name" maxlength="75"/>
+	  		<input type="text" name="name" maxlength="75" value="$n"/>
 	  	  </label>
 		  <label>Email
-		  	<input type="text" name="email" maxlength="150"/>
+		  	<input type="text" name="email" maxlength="150" value="$e"/>
 		  </label>
 		  <label>Comment
-		  	<textarea name="comment" cols="45" rows="10"></textarea>
-		  </label>
+		  	<textarea name="comment" cols="45" rows="10">$c</textarea>
+		  </label>$challenge
 		  <input type="submit" name="submit" value="Post Comment" />
 		  <input type="submit" name="submit" value="Cancel" />
 		  <input type="hidden" name="blog_id" value=$blog_id />
@@ -36,6 +67,21 @@ FORM;
 		
 	//Save comments to the database
 	public function saveComment($p){
+		//Save the comment info in a session
+		$_SESSION['c_name']=htmlentities($p['name'],ENT_QUOTES);
+		$_SESSION['c_email']=htmlentities($p['email'],ENT_QUOTES);
+		$_SESSION['c_comment']=htmlentities($p['comment'],ENT_QUOTES);
+		//Check if email address is valid
+		if($this->validateEmail($p['email'])==FALSE){
+			$_SESSION['error']=2;
+			return ;
+		}
+		
+		//Check if the Math quesiton is properly answered
+		if(!$this->verifyResponse($p['s_q'])){
+			$_SESSION['error']=3;
+			return;
+		}
 		//Sanitize the data and store in variables
 		$blog_id=htmlentities(strip_tags($p['blog_id']),ENT_QUOTES);
 		$name=htmlentities(strip_tags($p['name']),ENT_QUOTES);
@@ -51,10 +97,15 @@ FORM;
 		if($stmt=$this->db->prepare($sql)){	
 			$stmt->execute(array($blog_id,$name,$email,$comment));
 			$stmt->closeCursor();
-			return TRUE;
+			
+			//Destory the comment info to empty the form
+			unset($_SESSION['c_name'],$_SESSION['c_email'],
+					$_SESSION['c_comment'],$_SESSION['error']);
+			return ;
 		}
 		else{
-			return FALSE;
+			$_SESSION['error']=1;
+			return;
 		}
 	}
 	
@@ -176,4 +227,40 @@ FORM;
 			return FALSE;
 	}
 	
+	//Checking if an email is valid
+	/*
+	 * Note: This method utilizes internal PHP method to validate email address as opposed to manually checking it
+	 */
+	private function validateEmail($email) {
+		return filter_var($email, FILTER_VALIDATE_EMAIL);
+	}
+	
+	//Add basic bot protection
+	private function generateChallenge(){
+		//Store two random numbers in an array
+		$numbers=array(mt_rand(1,4),mt_rand(1,4));
+		
+		//Store the answer in a session
+		$_SESSION['challenge']=$numbers[0]+$numbers[1];
+		
+		//Convert the numbers to their ACSII codes
+		$converted=array_map('ord',$numbers);
+		
+		//Generate a math question as HTML markup
+		return "
+		<label>&#87;&#104;&#97;&#116;&#32;&#105;&#115;&#32;
+		&#$converted[0];&#32;&#43;&#32;&#$converted[1];&#63;
+		<input type=\"text\" name=\"s_q\" />
+		</label>";
+	}
+	
+	//Check user input for the Math question
+	private function verifyResponse($resp){
+		//Grab the session value then destory it
+		$val=$_SESSION['challenge'];
+		unset($_SESSION['challenge']);
+		
+		//Return true if reral
+		return $val==$resp;
+	}
 }

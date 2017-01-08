@@ -147,3 +147,37 @@ function createUserForm(){
 	</form>
 FORM;
 }
+	
+//create shortUrl
+function shortenUrl($url,$format='txt'){
+	//Format a call to the bit.ly API
+	$api='http://api.bit.ly/v3/shorten';
+	$param='login=fantasyhong'.'&apiKey=R_551e8eef82c24c229908fe488e7b2503'.'&uri='.urlencode($url).'&format='.$format;
+	
+	//Open a connection and load the response
+	$uri=$api."?".$param;
+	return curl_get_result($uri);
+}
+
+/* returns a result form url 
+ * Source: https://davidwalsh.name/bitly-api-php
+ * */
+function curl_get_result($url) {
+	$ch = curl_init();
+	$timeout = 5;
+	curl_setopt($ch,CURLOPT_URL,$url);
+	curl_setopt($ch,CURLOPT_RETURNTRANSFER,1);
+	curl_setopt($ch,CURLOPT_CONNECTTIMEOUT,$timeout);
+	$data = curl_exec($ch);
+	curl_close($ch);
+	return $data;
+}
+
+//Post the current link to Twitter
+function postToTwitter($title){
+	// Replace lvh.me to $_SERVER['HTTP_HOST'] when the blog goes online
+	$full='http://'.'lvh.me'.$_SERVER['REQUEST_URI']; 
+	$short=shortenUrl($full);
+	$status=$title.' '.$short;
+	return 'https://twitter.com/?status='.urldecode($status);
+}

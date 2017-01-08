@@ -99,7 +99,7 @@ else if($_SERVER['REQUEST_METHOD']=='POST'
 	$comments=new Comments();
 	
 	//Save the comment
-	if($comments->saveComment($_POST)){ //essentially a lazy way to pass all the info, could be handled better
+	$comments->saveComment($_POST); //essentially a lazy way to pass all the info, could be handled better
 		//If available, store the entry the user came from
 		if(isset($_SERVER['HTTP_REFERER'])){
 			$loc=$_SERVER['HTTP_REFERER'];
@@ -110,12 +110,9 @@ else if($_SERVER['REQUEST_METHOD']=='POST'
 		//send the user back to the entry
 		header('Location: '.$loc);
 		exit;
-	}
 	
-	//If saving fails, output an error message
-	else{
-		exit('Something went wrong while saving the comment');
-	}
+	
+	
 }
 
 //If the delete link is clicked on a comment, confirm it here
@@ -185,11 +182,13 @@ else if($_SERVER['REQUEST_METHOD']=='POST'
 		
 		if(password_verify($pass, $check_pass)){
 			$_SESSION['loggedin']=1;
+			header('Location: /simple_blog/');
 		}
 		else{
 			$_SESSION['loggedin']=0;
+			header('Location: /simple_blog/admin');
 		}
-		header('Location: /simple_blog/');
+		//header('Location: /simple_blog/');
 		exit;
 }
 
@@ -220,6 +219,8 @@ else if($_GET['action']=='logout'){
 	exit;
 }
 else{
+	unset($_SESSION['c_name'],$_SESSION['c_email'],
+			$_SESSION['c_comment'],$_SESSION['error']);
 	$page=htmlentities(strip_tags($_POST['page']));
 	header('Location:/simple_blog/'.$page);
 	exit;

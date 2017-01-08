@@ -4,6 +4,12 @@ This repository contains all the code I've written so far when reading the book 
 
 <strong style="font-size:20px">Change Log</strong><br />
 
+1/8/2017:
+<ul><li>Added basic spam prevention</li>
+<li>Added Post To Twitter function</li>
+</ul>
+<br />
+
 1/7/2017:
 <ul><li>Added an admin account to hide controls from unauthorized users</li>
 <li>Used a strong encryption algorithm (bcrypt) instead of the sha1 algorithm used in the book</li>
